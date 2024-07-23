@@ -1,0 +1,39 @@
+<!-- register.component.html -->
+<form (ngSubmit)="onRegister()" class="flex flex-col items-center w-full gap-8">
+  <h1 class="w-7/12 text-3xl font-bold">Register</h1>
+  <!-- Campo de Nome -->
+  <div class="flex text-lg w-7/12 flex-col items-center">
+    <input type="text" placeholder="Name" [(ngModel)]="registerData.name" name="name" required
+      class="border border-slate-400 rounded p-1.5 px-4 w-full hover:border-sky-700 focus:border-sky-600 hover:border-2 h-12">
+  </div>
+
+  <!-- Campo de Email -->
+  <div class="flex text-lg w-7/12 flex-col items-center">
+    <input type="email" placeholder="Email" [(ngModel)]="registerData.email" name="email" required
+      class="border border-slate-400 rounded p-1.5 px-4 w-full hover:border-sky-700 focus:border-sky-600 hover:border-2 h-12">
+  </div>
+
+  <!-- Campo de Telefone -->
+  <div class="flex text-lg w-7/12 flex-col items-center">
+    <input type="tel" placeholder="Phone" [(ngModel)]="registerData.phone" name="phone" required
+      class="border border-slate-400 rounded p-1.5 px-4 w-full hover:border-sky-700 focus:border-sky-600 hover:border-2 h-12">
+  </div>
+
+  <!-- Campo de Senha -->
+  <div class="flex text-lg w-7/12 flex-col items-center">
+    <input type="password" placeholder="Password" [(ngModel)]="registerData.password" name="password" required
+      class="border border-slate-400 rounded p-1.5 px-4 w-full hover:border-sky-700 focus:border-sky-600 hover:border-2 h-12">
+  </div>
+
+  <!-- Botões -->
+  <div class="flex gap-4 w-7/12">
+    <button type="submit" class="bg-blue-950 text-white py-2 px-4 rounded hover:bg-blue">
+      Register
+    </button>
+    <button type=" button" (click)="onToggle()"
+      class="bg-gray-100 text-gray-400 py-2 px-4 rounded hover:bg-gray-400 hover:text-white cursor-pointer border border-slate-300">
+      Login
+    </button>
+  </div>
+  <div class="w-7/12 border-t border-slate-300 mt-9"></div>
+</form>

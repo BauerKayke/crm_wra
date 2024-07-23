@@ -1,0 +1,29 @@
+<main class="flex justify-center items-center flex-col p-6">
+  <!-- Logo -->
+  <div class="w-1/4 mt-8 mb-10">
+    <img src="../../../assets/wraBlack.png" alt="Logo">
+  </div>
+
+  <!-- Alternar entre Login e Registro -->
+  <div class="flex flex-col items-center w-2/4 gap-8">
+    <!-- Formulário Condicional -->
+    <div class="flex flex-col w-full justify-center items-center">
+      <app-login class="w-full" *ngIf="isLogin" (toggle)="toggleMode()"></app-login>
+      <app-register class="w-full" *ngIf="!isLogin" (toggle)="toggleMode()"></app-register>
+    </div>
+  </div>
+
+
+  <!-- Informações de Termos de Serviço -->
+  <div class="p-4 mt-5 text-center">
+    <p class="text-md">
+      By signing in you agree to BoldTrail
+      <br>
+      BackOffice's
+      <a routerLink="/terms-of-service"
+        class="text-blue-600 underline font-semibold cursor-pointer hover:text-blue-800">
+        Terms of Service
+      </a>.
+    </p>
+  </div>
+</main>
