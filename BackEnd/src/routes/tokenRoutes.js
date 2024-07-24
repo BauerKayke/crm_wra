@@ -3,5 +3,5 @@ import tokenController from '../controllers/TokenController';
 
 const router = new Router();
 
-router.post('/', tokenController.store);
+router.get('/', tokenController.index);
 export default router;

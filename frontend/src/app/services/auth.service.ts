@@ -7,32 +7,71 @@ import axios from 'axios';
 export class AuthService {
   private apiUrl = 'http://localhost:3001';
 
-  async login(email: string, password: string) {
+  async register(nome: string, email: string, phone: string, password: string) {
+    return await axios.post(`${this.apiUrl}/users/register`, {
+      nome,
+      email,
+      phone,
+      password,
+    });
+  }
+
+  async validateAccount(email: string, code: string) {
+    return await axios.post(`${this.apiUrl}/users/validate`, { email, code });
+  }
+
+  async login(email: string, password: string, rememberMe: boolean) {
+    const response = await axios.post(`${this.apiUrl}/users/login`, {
+      email,
+      password,
+      rememberMe,
+    });
+    if (response.data.token) {
+      if (rememberMe) {
+        localStorage.setItem('token', response.data.token);
+      } else {
+        sessionStorage.setItem('token', response.data.token);
+      }
+    } else {
+      throw new Error('Erro ao obter token');
+    }
+    return response.data;
+  }
+
+  getToken() {
+    return localStorage.getItem('token') || sessionStorage.getItem('token');
+  }
+
+  logout() {
+    localStorage.removeItem('token');
+    sessionStorage.removeItem('token');
+  }
+
+  async isAuthenticated(): Promise<boolean> {
+    const token = this.getToken();
+    if (!token) return false;
+
     try {
-      const response = await axios.get(`${this.apiUrl}/users/login/`, {
-        params: { email, password },
+      const response = await axios.get(`${this.apiUrl}/tokens/`, {
+        headers: { Authorization: `Bearer ${token}` },
       });
-      return response.data;
-    } catch (error) {
-      console.error('Erro ao fazer login', error);
-      throw error;
+      return response.status === 200;
+    } catch {
+      return false;
     }
   }
 
-  async register(name: string, email: string, phone: string, password: string) {
-    try {
-      console.log(name, email, password, phone);
+  async getUserInfo() {
+    const token = this.getToken();
+    if (!token) return null;
 
-      const response = await axios.post(`${this.apiUrl}/users/register/`, {
-        name,
-        email,
-        phone,
-        password,
+    try {
+      const response = await axios.get(`${this.apiUrl}/users/me`, {
+        headers: { Authorization: `Bearer ${token}` },
       });
       return response.data;
-    } catch (error) {
-      console.error('Erro ao fazer registro', error);
-      throw error;
+    } catch {
+      return null;
     }
   }
 }

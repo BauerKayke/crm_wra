@@ -1,0 +1,20 @@
+<form (ngSubmit)="onValidate()" class="flex flex-col items-center w-full gap-8">
+  <h1 class="text-3xl font-bold">Validação de Conta</h1>
+
+  <div class="flex text-lg w-7/12 flex-col items-center">
+    <input type="email" placeholder="Email" [(ngModel)]="validationData.email" name="email" required
+      class="border border-slate-400 rounded p-1.5 px-4 w-full hover:border-sky-700 focus:border-sky-600 hover:border-2 h-12">
+  </div>
+
+  <div class="flex text-lg w-7/12 flex-col items-center">
+    <input type="text" placeholder="Código de Validação" [(ngModel)]="validationData.code" name="code" required
+      class="border border-slate-400 rounded p-1.5 px-4 w-full hover:border-sky-700 focus:border-sky-600 hover:border-2 h-12">
+  </div>
+
+  <button type="submit" class="bg-blue-950 text-white py-2 px-4 rounded hover:bg-blue-700">
+    Validar Conta
+  </button>
+
+  <div *ngIf="errorMessage" class="text-red-500">{{ errorMessage }}</div>
+  <div *ngIf="successMessage" class="text-green-500">{{ successMessage }}</div>
+</form>

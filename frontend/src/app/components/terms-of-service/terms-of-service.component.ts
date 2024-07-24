@@ -10,6 +10,7 @@ import { Location } from '@angular/common';
 })
 export class TermsOfServiceComponent {
   constructor(private location: Location) {}
+
   goBack() {
     this.location.back();
   }

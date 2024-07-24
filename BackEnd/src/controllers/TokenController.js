@@ -1,30 +1,21 @@
+/* eslint-disable consistent-return */
 import jwt from 'jsonwebtoken';
-import User from '../models/User';
 
 class TokenController {
-  async store(req, res) {
-    const { email = '', password = '' } = req.body;
-    if (!email || !password) {
-      return res.status(401).json({
-        errors: ['Credenciais inválidas'],
-      });
+  async index(req, res) {
+    const token = req.headers.authorization?.split(' ')[1];
+    console.log('Token:', token);
+    if (!token) {
+      return res.status(401).json({ error: 'No token provided' });
     }
-    const user = await User.findOne({ where: { email } });
-    if (!user) {
-      return res.status(401).json({
-        errors: ['Usuário não existe'],
-      });
-    }
-    if (!(await user.passwordIsValid(password))) {
-      return res.status(401).json({
-        errors: ['Senha inválida'],
-      });
-    }
-    const { id } = user;
-    const token = jwt.sign({ id, email }, process.env.TOKEN_SECRET, {
-      expiresIn: process.env.TOKEN_EXPIRATION,
+
+    jwt.verify(token, process.env.TOKEN_SECRET, (err) => {
+      if (err) {
+        return res.status(401).json({ error: 'Invalid token' });
+      }
+      console.log(res);
+      return res.status(200).json({ message: 'Token is valid' });
     });
-    return res.json({ token, user: { nome: user.nome, id, email } });
   }
 }
 

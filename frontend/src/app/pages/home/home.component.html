@@ -1,4 +1,7 @@
-<div class="home">
-  <h1>Welcome to Home</h1>
-  <!-- Conteúdo da página home -->
-</div>
+<!-- home.component.html -->
+<main class="flex items-center h-screen">
+  <app-sidebar></app-sidebar>
+  <div class="ml-64 p-4 w-full">
+    <router-outlet></router-outlet>
+  </div>
+</main>

@@ -4,17 +4,15 @@ import helmet from 'helmet';
 import delay from 'express-delay';
 import dotenv from 'dotenv';
 
-import './database';
-import userRoutes from './routes/userRoutes';
-import tokenRoutes from './routes/tokenRoutes';
-import transactionRoutes from './routes/transactionRoutes'; // Nova rota
+import './database'; // Conecta ao banco de dados
+import userRoutes from './routes/userRoutes'; // Rotas para usuários
+import tokenRoutes from './routes/tokenRoutes'; // Rotas para tokens
+import transactionRoutes from './routes/transactionRoutes';
+import passwordRoutes from './routes/passwordRoutes'; // Rotas para transações
 
-dotenv.config();
+dotenv.config(); // Carrega variáveis de ambiente
 
-const whiteList = [
-  'http://localhost:3000',
-  'http://localhost:4200',
-];
+const whiteList = ['http://localhost:3000', 'http://localhost:4200'];
 
 const corsOptions = {
   origin(origin, callback) {
@@ -36,15 +34,16 @@ class App {
   middlewares() {
     this.app.use(cors(corsOptions));
     this.app.use(helmet({ crossOriginEmbedderPolicy: false }));
-    this.app.use(delay(2000));
+    this.app.use(delay(2000)); // Adiciona um atraso para simulação
     this.app.use(express.urlencoded({ extended: true }));
     this.app.use(express.json());
   }
 
   routes() {
-    this.app.use('/users/', userRoutes);
-    this.app.use('/tokens/', tokenRoutes);
-    this.app.use('/transactions/', transactionRoutes); // Nova rota
+    this.app.use('/users', userRoutes);
+    this.app.use('/tokens', tokenRoutes);
+    this.app.use('/transactions', transactionRoutes);
+    this.app.use('/reset', passwordRoutes);
   }
 }
 

@@ -1,0 +1,48 @@
+<form (ngSubmit)="onRegister()" class="flex flex-col items-center w-full gap-8 p-6 bg-gray-100">
+  <h1 class="w-7/12 text-3xl font-bold text-gray-900 font-heading">Register</h1>
+
+  <!-- Campo de Nome -->
+  <div class="w-7/12 flex flex-col items-center">
+    <input type="text" placeholder="Name" [(ngModel)]="registerData.nome" name="name" required
+      [ngClass]="{'border-red-500': errors.nome}" (input)="validateInputs()"
+      class="border border-gray-400 rounded p-2 px-4 w-full hover:border-yellow-600 focus:border-yellow-700 hover:border-2 h-12" />
+    <span *ngIf="errors.nome" class="text-red-500">{{ errors.nome }}</span>
+  </div>
+
+  <!-- Campo de Email -->
+  <div class="w-7/12 flex flex-col items-center">
+    <input type="email" placeholder="Email" [(ngModel)]="registerData.email" name="email" required
+      [ngClass]="{'border-red-500': errors.email}" (input)="validateInputs()"
+      class="border border-gray-400 rounded p-2 px-4 w-full hover:border-yellow-600 focus:border-yellow-700 hover:border-2 h-12" />
+    <span *ngIf="errors.email" class="text-red-500">{{ errors.email }}</span>
+  </div>
+
+  <!-- Campo de Telefone -->
+  <div class="w-7/12 flex flex-col items-center">
+    <input type="tel" placeholder="Phone" [(ngModel)]="registerData.phone" name="phone" required
+      [ngClass]="{'border-red-500': errors.phone}" (input)="validateInputs()"
+      class="border border-gray-400 rounded p-2 px-4 w-full hover:border-yellow-600 focus:border-yellow-700 hover:border-2 h-12" />
+    <span *ngIf="errors.phone" class="text-red-500">{{ errors.phone }}</span>
+  </div>
+
+  <!-- Campo de Senha -->
+  <div class="w-7/12 flex flex-col items-center">
+    <input type="password" placeholder="Password" [(ngModel)]="registerData.password" name="password" required
+      [ngClass]="{'border-red-500': errors.password}" (input)="validateInputs()"
+      class="border border-gray-400 rounded p-2 px-4 w-full hover:border-yellow-600 focus:border-yellow-700 hover:border-2 h-12" />
+    <span *ngIf="errors.password" class="text-red-500">{{ errors.password }}</span>
+  </div>
+
+  <!-- Botões -->
+  <div class="flex gap-4 w-7/12">
+    <button type="submit"
+      class="bg-yellow-600 text-white py-2 px-4 rounded hover:bg-yellow-700 transition duration-300">
+      Register
+    </button>
+    <button type="button" (click)="onToggle()"
+      class="bg-gray-200 text-gray-600 py-2 px-4 rounded hover:bg-gray-300 hover:text-black transition duration-300 border border-gray-300">
+      Login
+    </button>
+  </div>
+  <div class="w-7/12 border-t border-gray-300 mt-3"></div>
+</form>

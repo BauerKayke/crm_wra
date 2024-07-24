@@ -10,7 +10,15 @@ module.exports = {
     "./src/**/**/**/**/**/**/**/*.{html,ts}",
   ],
   theme: {
-    extend: {},
+    extend: {
+      fontFamily: {
+        sans: ['Roboto', 'sans-serif'],
+        heading: ['Montserrat', 'sans-serif']
+      },
+      colors: {
+        'gold': '#FFD700', // Dourado
+      },
+    },
   },
   plugins: [],
 }

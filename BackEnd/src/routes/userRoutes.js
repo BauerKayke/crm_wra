@@ -1,24 +1,15 @@
 import { Router } from 'express';
-import userController from '../controllers/UserController';
-// import loginRequired from '../middlewares/loginRequired';
+import UserController from '../controllers/UserController';
 
-const router = new Router();
+const router = Router();
 
-// Rota para login
-router.post('/login', userController.login);
+// Rota para registrar um novo usuário
+router.post('/register', UserController.store);
 
-// Rotas de usuário
-router.post('/register', userController.store); // Altere de '/' para '/register'
-// router.get('/:id', userController.show); // Lista um usuário específico
-// router.put('/', loginRequired, userController.update);
-// router.delete('/', loginRequired, userController.delete);
+// Rota para login do usuário
+router.post('/login', UserController.login);
+
+// Rota para validar o código de ativação do usuário
+router.post('/validate', UserController.validateAccount);
 
 export default router;
-
-/*
-index -> lista todos os usuários -> GET
-store/create -> cria um novo usuário -> POST
-delete -> apaga um usuário -> DELETE
-show -> mostra um usuário -> GET
-update -> atualiza informações de um usuário -> PATCH ou PUT
-*/
