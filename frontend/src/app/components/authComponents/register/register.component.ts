@@ -3,20 +3,27 @@ import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { AuthService } from '../../../services/auth.service';
+import { MessageService } from 'primeng/api';
+import { ToastModule } from 'primeng/toast';
 
 @Component({
   selector: 'app-register',
   templateUrl: './register.component.html',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, ToastModule],
   styleUrls: ['./register.component.scss'],
+  providers: [MessageService],
 })
 export class RegisterComponent {
   registerData = { nome: '', email: '', phone: '', password: '' };
   errors: any = {};
   @Output() toggle = new EventEmitter<void>();
 
-  constructor(private router: Router, private authService: AuthService) {}
+  constructor(
+    private router: Router,
+    private authService: AuthService,
+    private messageService: MessageService
+  ) {}
 
   onToggle() {
     this.toggle.emit();
@@ -37,10 +44,14 @@ export class RegisterComponent {
       );
       console.log('Registro bem-sucedido', response);
 
-      this.router.navigate(['/validate-account']); // Redireciona para a página de login
+      this.showSuccess('Registro bem-sucedido!');
+      setTimeout(() => {
+        this.router.navigate(['/validate-account']);
+      }, 2000); // Atraso de 2 segundos
     } catch (error: any) {
-      this.errors.general =
+      const errorMsg =
         error.response?.data?.errors?.join(', ') || 'Erro ao fazer registro';
+      this.showError(errorMsg);
       console.error('Erro ao fazer registro', error);
     }
   }
@@ -92,5 +103,21 @@ export class RegisterComponent {
     }
 
     return isValid;
+  }
+
+  showError(message: string) {
+    this.messageService.add({
+      severity: 'error',
+      summary: 'Erro',
+      detail: message,
+    });
+  }
+
+  showSuccess(message: string) {
+    this.messageService.add({
+      severity: 'success',
+      summary: 'Sucesso',
+      detail: message,
+    });
   }
 }

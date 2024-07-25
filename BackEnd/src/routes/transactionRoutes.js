@@ -1,5 +1,8 @@
+// routes/transactionRoutes.js
+
 import { Router } from 'express';
 import transactionController from '../controllers/TransactionController';
+// import authenticateToken from '../middlewares/authMiddleware';
 
 const router = new Router();
 

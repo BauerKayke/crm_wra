@@ -39,6 +39,22 @@ export default class Transaction extends Model {
         type: Sequelize.DATE,
         allowNull: true,
       },
+      additional_field_1: {
+        type: Sequelize.STRING,
+        allowNull: true,
+      },
+      additional_field_2: {
+        type: Sequelize.STRING,
+        allowNull: true,
+      },
+      type: {
+        type: Sequelize.STRING,
+        allowNull: false,
+      },
+      status: {
+        type: Sequelize.STRING,
+        allowNull: false,
+      },
     }, {
       sequelize,
       tableName: 'transactions',

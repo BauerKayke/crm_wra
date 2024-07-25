@@ -1,0 +1,93 @@
+<aside [ngClass]="{'w-0 p-6': isSidebarCollapsed, 'w-2/12': !isSidebarCollapsed}"
+  class="bg-gray-800 text-white fixed inset-y-0 p-10 pl-6 flex flex-col gap-6 transition-all duration-300">
+  <!-- Botão de Alternância -->
+  <button (click)="toggleSidebar()"
+    class="absolute top-6 right-0 bg-yellow-600 p-2 rounded-l-md text-white focus:outline-none">
+    <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+    </svg>
+  </button>
+
+  <!-- Conteúdo da Sidebar -->
+  <div *ngIf="!isSidebarCollapsed">
+    <img src="../../../../assets/wraBlack.png" alt="Logo" class="mb-4 w-auto" />
+
+    <!-- Overview Section -->
+    <div>
+      <div class="flex items-center mb-2 mt-5">
+        <img src="../../../../assets/icons8-gráfico-de-barras-24.png" alt="Overview Icon" class="w-6 h-5" />
+        <h2 class="text-yellow-500 text-xl ml-2">OVERVIEW</h2>
+      </div>
+      <ul class="space-y-1">
+        <li class="text-lg px-8 py-1 hover:bg-yellow-600 hover:text-white" routerLink="/home/dashboard"
+          routerLinkActive="bg-yellow-600 text-white">
+          <a routerLink="/home/dashboard">Dashboard</a>
+        </li>
+        <li class="text-lg px-8 py-1 hover:bg-yellow-600 hover:text-white" routerLink="/home/pipeline"
+          routerLinkActive="bg-yellow-600 text-white">
+          <a routerLink="/home/pipeline">Pipeline</a>
+        </li>
+        <li class="text-lg px-8 py-1 hover:bg-yellow-600 hover:text-white" routerLink="/home/transactions"
+          routerLinkActive="bg-yellow-600 text-white">
+          <a routerLink="/home/transactions">Transactions</a>
+        </li>
+        <li class="text-lg px-8 py-1 hover:bg-yellow-600 hover:text-white" routerLink="/home/buyer-offers"
+          routerLinkActive="bg-yellow-600 text-white">
+          <a routerLink="/home/buyer-offers">Buyer offers</a>
+        </li>
+        <li class="text-lg px-8 py-1 hover:bg-yellow-600 hover:text-white" routerLink="/home/contacts"
+          routerLinkActive="bg-yellow-600 text-white">
+          <a routerLink="/home/contacts">Contacts</a>
+        </li>
+        <li class="text-lg px-8 py-1 hover:bg-yellow-600 hover:text-white" routerLink="/home/library"
+          routerLinkActive="bg-yellow-600 text-white">
+          <a routerLink="/home/library">Library</a>
+        </li>
+      </ul>
+    </div>
+
+    <!-- To Do Section -->
+    <div>
+      <div class="flex items-center mb-1 mt-5">
+        <img src="../../../../assets/icons8-sino-24.png" alt="Todo Icon" class="w-6 h-5" />
+        <h2 class="text-yellow-500 text-xl ml-2">TO DO</h2>
+      </div>
+      <ul class="space-y-1">
+        <li class="text-lg px-8 py-1 hover:bg-yellow-600 hover:text-white" routerLink="/home/calendar"
+          routerLinkActive="bg-yellow-600 text-white">
+          <a routerLink="/home/calendar">Calendar</a>
+        </li>
+      </ul>
+    </div>
+
+    <!-- User Section -->
+    <div>
+      <div class="flex items-center mb-2 mt-5">
+        <img src="../../../../assets/icons8-engrenagem-24.png" alt="User Icon" class="w-6 h-5" />
+        <h2 class="text-yellow-500 text-xl ml-2">USER</h2>
+      </div>
+      <ul class="space-y-1">
+        <li class="text-lg px-8 py-1 hover:bg-yellow-600 hover:text-white" routerLink="/home/notifications"
+          routerLinkActive="bg-yellow-600 text-white">
+          <a routerLink="/home/notifications">Notifications</a>
+        </li>
+        <li class="text-lg px-8 py-1 hover:bg-yellow-600 hover:text-white" routerLink="/home/billing"
+          routerLinkActive="bg-yellow-600 text-white">
+          <a routerLink="/home/billing">Billing</a>
+        </li>
+        <li class="text-lg px-8 py-1 hover:bg-yellow-600 hover:text-white" routerLink="/home/add-ons"
+          routerLinkActive="bg-yellow-600 text-white">
+          <a routerLink="/home/add-ons">Add-ons</a>
+        </li>
+        <li class="text-lg px-8 py-1 hover:bg-yellow-600 hover:text-white" routerLink="/home/share-earn"
+          routerLinkActive="bg-yellow-600 text-white">
+          <a routerLink="/home/share-earn">Share & earn cash</a>
+        </li>
+        <li class="text-lg px-8 py-1 hover:bg-yellow-600 hover:text-white" routerLink="/home/sign-out"
+          routerLinkActive="bg-yellow-600 text-white">
+          <a routerLink="/home/sign-out">Sign out</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</aside>

@@ -1,7 +1,7 @@
-<!-- home.component.html -->
-<main class="flex items-center h-screen">
+<main class="flex h-screen">
   <app-sidebar></app-sidebar>
-  <div class="ml-64 p-4 w-full">
+  <div [ngClass]="{'ml-10': isSidebarCollapsed, 'ml-80': !isSidebarCollapsed}"
+    class="flex-1 p-4 transition-all duration-300 ">
     <router-outlet></router-outlet>
   </div>
 </main>

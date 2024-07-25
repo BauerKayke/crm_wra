@@ -27,10 +27,13 @@ export class AuthService {
       rememberMe,
     });
     if (response.data.token) {
-      if (rememberMe) {
-        localStorage.setItem('token', response.data.token);
-      } else {
-        sessionStorage.setItem('token', response.data.token);
+      if (typeof window !== 'undefined') {
+        // Verifica se estamos no navegador
+        if (rememberMe) {
+          localStorage.setItem('token', response.data.token);
+        } else {
+          sessionStorage.setItem('token', response.data.token);
+        }
       }
     } else {
       throw new Error('Erro ao obter token');
@@ -39,12 +42,19 @@ export class AuthService {
   }
 
   getToken() {
-    return localStorage.getItem('token') || sessionStorage.getItem('token');
+    if (typeof window !== 'undefined') {
+      // Verifica se estamos no navegador
+      return localStorage.getItem('token') || sessionStorage.getItem('token');
+    }
+    return null;
   }
 
   logout() {
-    localStorage.removeItem('token');
-    sessionStorage.removeItem('token');
+    if (typeof window !== 'undefined') {
+      // Verifica se estamos no navegador
+      localStorage.removeItem('token');
+      sessionStorage.removeItem('token');
+    }
   }
 
   async isAuthenticated(): Promise<boolean> {

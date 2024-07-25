@@ -3,8 +3,6 @@ import { LoginRegisterComponent } from './pages/login-register/login-register.co
 import { HomeComponent } from './pages/home/home.component';
 import { ForgotPasswordComponent } from './components/authComponents/forgot-password/forgot-password.component';
 import { TermsOfServiceComponent } from './components/terms-of-service/terms-of-service.component';
-import { LoginComponent } from './components/authComponents/login/login.component';
-import { RegisterComponent } from './components/authComponents/register/register.component';
 import { AccountValidationComponent } from './components/authComponents/account-validation/account-validation.component';
 import { VerifyCodeComponent } from './components/authComponents/verify-code/verify-code.component'; // Adicionado
 import { ResetPasswordComponent } from './components/authComponents/reset-password/reset-password.component'; // Adicionado
@@ -44,8 +42,6 @@ const routes: Routes = [
   { path: 'verify-code', component: VerifyCodeComponent },
   { path: 'reset-password', component: ResetPasswordComponent },
   { path: 'validate-account', component: AccountValidationComponent },
-  { path: 'register', component: RegisterComponent },
-  { path: 'login', component: LoginComponent },
   { path: 'termsService', component: TermsOfServiceComponent },
   { path: '**', redirectTo: '', pathMatch: 'full' },
 ];

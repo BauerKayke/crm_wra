@@ -1,1 +1,94 @@
-<p>transactions works!</p>
+<div class="p-8 bg-white shadow-lg rounded-lg">
+  <!-- Seção do Título e Contador -->
+  <div class="flex justify-between items-center mb-6">
+    <!-- Contador de Transactions -->
+    <div class="flex items-center space-x-3">
+      <div class="bg-yellow-500 text-white px-4 py-2 rounded-full text-3xl font-bold">
+        {{ transactionCount }}
+      </div>
+      <!-- Título -->
+      <div class="flex items-center space-x-2">
+        <h1 class="text-3xl font-semibold text-slate-900">TRANSACTIONS</h1>
+        <!-- Ícone de Interrogação -->
+        <div class="relative group">
+          <img src="../../../../assets/icons8-ponto-de-interrogação-64.png" alt="Help Icon"
+            class="w-6 h-6 cursor-pointer" />
+          <div
+            class="absolute left-1/2 transform -translate-x-1/2 top-full mt-2 w-64 p-3 bg-gray-800 text-white text-sm rounded-lg shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+            This is an explanation tooltip with detailed information.
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Barra de busca e botão -->
+    <div class="flex items-center space-x-4">
+      <input type="text" placeholder="Search address, MLS # ..."
+        class="px-4 py-2 rounded-full w-64 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-yellow-500 transition duration-300" />
+      <button (click)="openCreateTransaction()"
+        class="bg-yellow-500 text-white px-4 py-2 rounded-lg flex items-center space-x-2 transition duration-300 hover:bg-yellow-600">
+        <span class="font-medium">Create Transaction</span>
+        <img src="../../../../assets/icons8-seta-para-baixo-30.png" alt="Arrow Down Icon" class="w-4 h-4" />
+      </button>
+    </div>
+  </div>
+
+  <!-- Net Income -->
+  <div class="text-xl text-slate-600 mb-4">
+    <p class="font-semibold">Net Income:</p>
+    <p class="text-2xl text-gray-800">{{ formatPrice(netIncome) }}</p>
+  </div>
+
+  <!-- Current View Section -->
+  <div class="mb-6">
+    <div class="flex items-center font-semibold text-slate-500 space-x-2">
+      <span>Current view:</span>
+      <span class="text-yellow-500 flex items-center relative">
+        Active
+        <img src="../../../../assets/icons8-seta-para-baixo-30.png" alt="Arrow Down Icon" class="w-4 h-4 ml-2" />
+        <!-- Linha abaixo de "Active" -->
+        <div class="absolute bottom-0 left-0 w-full border-b-2 border-dotted border-yellow-500"></div>
+      </span>
+    </div>
+  </div>
+
+  <!-- Exibição de Transações -->
+  <div *ngIf="transactions.length > 0" class="grid gap-6 mt-8">
+    <div *ngFor="let transaction of transactions"
+      class="bg-white border border-gray-200 rounded-lg shadow-md overflow-hidden">
+      <div class="p-6 flex flex-col space-y-4">
+        <div class="flex items-center space-x-3">
+          <div
+            class="w-32 h-16 bg-yellow-500 text-white flex items-center justify-center rounded-full font-semibold text-xl">
+            {{ formatPrice(transaction.price) }}
+          </div>
+          <div class="flex-1">
+            <h2 class="text-xl font-semibold text-slate-900">{{ transaction.address }}</h2>
+            <p class="text-gray-600">{{ transaction.city }}, {{ transaction.state }} {{ transaction.zip }}</p>
+          </div>
+        </div>
+        <div class="grid grid-cols-2 gap-4">
+          <div class="space-y-1">
+            <p class="text-gray-500">Listing Date</p>
+            <p class="text-gray-800 font-medium">{{ transaction.listingDate | date:'MMM d, y' }}</p>
+          </div>
+          <div class="space-y-1">
+            <p class="text-gray-500">Expiration Date</p>
+            <p class="text-gray-800 font-medium">{{ transaction.expirationDate | date:'MMM d, y' }}</p>
+          </div>
+          <div class="space-y-1">
+            <p class="text-gray-500">Acceptance Date</p>
+            <p class="text-gray-800 font-medium">{{ transaction.acceptanceDate | date:'MMM d, y' }}</p>
+          </div>
+          <div class="space-y-1">
+            <p class="text-gray-500">Closing Date</p>
+            <p class="text-gray-800 font-medium">{{ transaction.closingDate | date:'MMM d, y' }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Componente de Criação de Transações -->
+  <app-create-transaction *ngIf="isCreateTransactionOpen" (transactionCreated)="onTransactionCreated($event)"
+    (close)="closeCreateTransaction()"></app-create-transaction>
+</div>

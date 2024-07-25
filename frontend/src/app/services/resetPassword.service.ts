@@ -6,6 +6,8 @@ import axios from 'axios';
 })
 export class PasswordResetService {
   private apiUrl = 'http://localhost:3001/reset'; // Altere para a URL da sua API
+  private timeoutMinutes = 5; // Tempo limite em minutos
+  private maxAttempts = 2; // Máximo de tentativas
 
   constructor() {}
 
@@ -16,6 +18,8 @@ export class PasswordResetService {
         email,
       });
       sessionStorage.setItem('resetEmail', email);
+      sessionStorage.setItem('resetStartTime', Date.now().toString());
+      sessionStorage.setItem('attempts', '0');
       return response.data;
     } catch (error) {
       console.error('Error requesting password reset:', error);
@@ -26,17 +30,41 @@ export class PasswordResetService {
   // Verificar o código de verificação
   async verifyCode(code: string) {
     const email = sessionStorage.getItem('resetEmail');
+    const startTime = parseInt(
+      sessionStorage.getItem('resetStartTime') || '0',
+      10
+    );
+    const attempts = parseInt(sessionStorage.getItem('attempts') || '0', 10);
+
     if (!email) {
       throw new Error('No email found in session');
     }
+
+    const currentTime = Date.now();
+    const timeElapsed = (currentTime - startTime) / 1000 / 60; // Convert to minutes
+
+    if (timeElapsed > this.timeoutMinutes) {
+      this.clearSession();
+      throw new Error('Time limit expired. Please request a new code.');
+    }
+
+    if (attempts >= this.maxAttempts) {
+      this.clearSession();
+      throw new Error(
+        'Maximum number of attempts exceeded. Please request a new code.'
+      );
+    }
+
     try {
       const response = await axios.post(`${this.apiUrl}/verify-code`, {
         email,
         code,
       });
       sessionStorage.setItem('resetCode', code);
+      sessionStorage.setItem('attempts', (attempts + 1).toString());
       return response.data;
     } catch (error) {
+      sessionStorage.setItem('attempts', (attempts + 1).toString());
       console.error('Error verifying code:', error);
       throw error;
     }
@@ -55,12 +83,19 @@ export class PasswordResetService {
         code,
         newPassword,
       });
-      sessionStorage.removeItem('resetEmail');
-      sessionStorage.removeItem('resetCode');
+      this.clearSession();
       return response.data;
     } catch (error) {
       console.error('Error resetting password:', error);
       throw error;
     }
+  }
+
+  // Limpar dados da sessão
+  private clearSession() {
+    sessionStorage.removeItem('resetEmail');
+    sessionStorage.removeItem('resetStartTime');
+    sessionStorage.removeItem('resetCode');
+    sessionStorage.removeItem('attempts');
   }
 }

@@ -3,13 +3,16 @@ import { AuthService } from '../../../services/auth.service';
 import { Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { MessageService } from 'primeng/api';
+import { ToastModule } from 'primeng/toast';
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterModule],
+  imports: [CommonModule, FormsModule, RouterModule, ToastModule],
   styleUrls: ['./login.component.scss'],
+  providers: [MessageService],
 })
 export class LoginComponent implements OnInit {
   loginData = { email: '', password: '', rememberMe: false };
@@ -17,7 +20,11 @@ export class LoginComponent implements OnInit {
   errorMessage = '';
   errors: any = {};
 
-  constructor(private router: Router, private authService: AuthService) {}
+  constructor(
+    private router: Router,
+    private authService: AuthService,
+    private messageService: MessageService
+  ) {}
 
   async ngOnInit() {
     const userInfo = await this.authService.getUserInfo();
@@ -43,13 +50,17 @@ export class LoginComponent implements OnInit {
       );
 
       if (response && response.token) {
-        this.router.navigate(['/home']);
+        this.showSuccess('Login realizado com sucesso');
+        setTimeout(() => {
+          this.router.navigate(['/home']);
+        }, 2000); // Atraso de 2 segundos
       } else {
-        this.errorMessage = 'Erro ao fazer login';
+        this.showError('Erro ao fazer login');
       }
     } catch (error: any) {
-      this.errorMessage =
+      const errorMsg =
         error.response?.data?.errors?.join(', ') || 'Erro ao fazer login';
+      this.showError(errorMsg);
       console.error('Erro ao fazer login', error);
     }
   }
@@ -77,5 +88,21 @@ export class LoginComponent implements OnInit {
     }
 
     return isValid;
+  }
+
+  showError(message: string) {
+    this.messageService.add({
+      severity: 'error',
+      summary: 'Erro',
+      detail: message,
+    });
+  }
+
+  showSuccess(message: string) {
+    this.messageService.add({
+      severity: 'success',
+      summary: 'Sucesso',
+      detail: message,
+    });
   }
 }

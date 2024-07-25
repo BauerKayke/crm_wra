@@ -1,19 +1,11 @@
-<!-- Exemplo usando SVG diretamente no HTML -->
 <div class="flex flex-col items-center p-6 bg-gray-100 min-h-screen">
   <!-- Logo -->
   <div class="w-1/4 mt-8 mb-10">
     <img src="../../../assets/wraBlack.png" alt="Logo">
   </div>
 
-  <!-- Botão de Voltar -->
-
-
-
-
-  <!-- Formulário de Verificação de Código -->
   <div class="bg-white shadow-md rounded-lg p-8 w-full max-w-md">
     <button (click)="goBack()" class="flex items-center mb-6 text-yellow-600 hover:text-yellow-800">
-
       <!-- Ícone de seta para a esquerda -->
       <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 mr-2" fill="none" viewBox="0 0 24 24"
         stroke="currentColor">
@@ -22,6 +14,9 @@
       <span class="text-lg font-medium">Back</span>
     </button>
     <h2 class="text-2xl font-bold text-gray-900 mb-6 text-center font-heading">Verify Code</h2>
+
+    <p-toast></p-toast> <!-- Adicione este componente para exibir os toasts -->
+
     <form (ngSubmit)="verifyCode()" class="flex flex-col gap-4">
       <!-- Campo de Código -->
       <div class="flex flex-col">

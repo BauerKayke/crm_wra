@@ -1,25 +1,34 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../../services/auth.service';
 import { Router, RouterModule } from '@angular/router';
-import { SidebarComponent } from '../../components/sidebar/sidebar.component';
+import { SidebarService } from '../../services/sideBar.service'; // Certifique-se de importar o serviço correto
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { SidebarComponent } from '../../components/homeComponents/sidebar/sidebar.component';
 
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss'],
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterModule, SidebarComponent],
+  imports: [CommonModule, RouterModule, SidebarComponent],
 })
 export class HomeComponent implements OnInit {
-  constructor(private authService: AuthService, private router: Router) {}
+  isSidebarCollapsed: boolean = false;
+
+  constructor(
+    private authService: AuthService,
+    private router: Router,
+    private sidebarService: SidebarService // Injete o serviço SidebarService
+  ) {}
 
   async ngOnInit() {
     const isAuthenticated = await this.authService.isAuthenticated();
-    console.log('Is Authenticated:', isAuthenticated);
     if (!isAuthenticated) {
       this.router.navigate(['/']);
     }
+
+    this.sidebarService.sidebarCollapsed$.subscribe(
+      (collapsed) => (this.isSidebarCollapsed = collapsed)
+    );
   }
 }
