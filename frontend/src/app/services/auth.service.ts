@@ -28,7 +28,6 @@ export class AuthService {
     });
     if (response.data.token) {
       if (typeof window !== 'undefined') {
-        // Verifica se estamos no navegador
         if (rememberMe) {
           localStorage.setItem('token', response.data.token);
         } else {

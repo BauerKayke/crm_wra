@@ -1,11 +1,11 @@
 <!-- Modal Content -->
 <div class="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50 z-50" *ngIf="isOpen">
   <p-toast></p-toast> <!-- Adiciona o componente p-toast -->
-  <div class="bg-white rounded-lg shadow-lg w-1/2 p-6 relative">
+  <div class="bg-white rounded-lg shadow-lg w-1/2 p-6 relative max-h-[80vh] overflow-y-auto p-4">
     <button (click)="closeModal()" class="absolute top-7 right-7 text-gray-500">
       <img src="../../../../../assets/icons8-excluir-24.png" alt="Close" class="w-5 h-5" />
     </button>
-    <h1 class="text-2xl font-semibold mb-4 ml-3">NEW TRANSACTION</h1>
+    <h1 class="text-2xl font-semibold mb-4 ml-3">{{ transaction ? 'Edit Transaction' : 'New Transaction' }}</h1>
     <div class="flex gap-4 mb-4">
       <!-- Transaction Type Dropdown -->
       <div class="relative inline-block text-left">
@@ -17,7 +17,7 @@
         </button>
         <!-- Dropdown Menu -->
         <div
-          class="absolute right-0 z-10 mt-2 w-56 origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
+          class="absolute left-0 z-10 mt-2 w-56 origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
           *ngIf="showTransactionTypeOptions">
           <div class="py-1">
             <a href="#" (click)="selectTransactionType(type); $event.preventDefault();"
@@ -30,7 +30,7 @@
 
       <!-- Status Dropdown -->
       <div class="relative inline-block text-left flex items-center">
-        <label for="">Status:</label>
+        <label for="status" class="mr-2">Status:</label>
         <button type="button"
           class="inline-flex w-full justify-between rounded-md px-3 py-2 font-semibold text-yellow-500 hover:bg-yellow-50"
           (click)="toggleStatusOptions()">
@@ -39,7 +39,7 @@
         </button>
         <!-- Dropdown Menu -->
         <div
-          class="absolute right-0 z-10 mt-2 w-56 origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
+          class="absolute left-0 z-10 mt-2 w-56 origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
           *ngIf="showStatusOptions">
           <div class="py-1">
             <a href="#" (click)="selectStatus(option); $event.preventDefault();"
@@ -55,23 +55,27 @@
       <div class="grid grid-cols-3 gap-4 mb-4 ml-3 mr-3">
         <div class="col-span-1">
           <label class="block mb-2 font-semibold">Address</label>
-          <input type="text" [(ngModel)]="address" name="address" class="w-full border border-gray-300 p-2 rounded"
+          <input type="text" [(ngModel)]="address" name="address"
+            class="w-full border border-gray-300 p-2 rounded focus:border-yellow-500 focus:ring-yellow-500 hover:border-yellow-500"
             required />
         </div>
         <div class="col-span-1">
           <label class="block mb-2 font-semibold">City</label>
-          <input type="text" [(ngModel)]="city" name="city" class="w-full border border-gray-300 p-2 rounded"
+          <input type="text" [(ngModel)]="city" name="city"
+            class="w-full border border-gray-300 p-2 rounded focus:border-yellow-500 focus:ring-yellow-500 hover:border-yellow-500"
             required />
         </div>
         <div class="col-span-1 grid grid-cols-2 gap-4">
           <div class="col-span-1">
             <label class="block mb-2 font-semibold">State</label>
-            <input type="text" [(ngModel)]="state" name="state" class="w-full border border-gray-300 p-2 rounded"
+            <input type="text" [(ngModel)]="state" name="state"
+              class="w-full border border-gray-300 p-2 rounded focus:border-yellow-500 focus:ring-yellow-500 hover:border-yellow-500"
               required />
           </div>
           <div class="col-span-1">
             <label class="block mb-2 font-semibold">Zip</label>
-            <input type="text" [(ngModel)]="zip" name="zip" class="w-full border border-gray-300 p-2 rounded"
+            <input type="text" [(ngModel)]="zip" name="zip"
+              class="w-full border border-gray-300 p-2 rounded focus:border-yellow-500 focus:ring-yellow-500 hover:border-yellow-500"
               (ngModelChange)="onZipChange()" required />
           </div>
         </div>
@@ -79,60 +83,63 @@
         <div class="col-span-1">
           <label class="block mb-2 font-semibold">Price</label>
           <input #priceInput type="text" [(ngModel)]="price" name="price"
-            class="w-full border border-gray-300 p-2 rounded" required />
+            class="w-full border border-gray-300 p-2 rounded focus:border-yellow-500 focus:ring-yellow-500 hover:border-yellow-500"
+            (ngModelChange)="onPriceChange($event)" required />
         </div>
         <div class="col-span-1">
           <label class="block mb-2 font-semibold">Listing Date</label>
           <input #listingDateInput type="text" [(ngModel)]="listingDate" name="listingDate"
-            class="w-full border border-gray-300 p-2 rounded" required />
+            class="w-full border border-gray-300 p-2 rounded focus:border-yellow-500 focus:ring-yellow-500 hover:border-yellow-500"
+            required />
         </div>
         <div class="col-span-1">
           <label class="block mb-2 font-semibold">Expiration Date</label>
           <input #expirationDateInput type="text" [(ngModel)]="expirationDate" name="expirationDate"
-            class="w-full border border-gray-300 p-2 rounded" required />
+            class="w-full border border-gray-300 p-2 rounded focus:border-yellow-500 focus:ring-yellow-500 hover:border-yellow-500"
+            required />
         </div>
         <div class="col-span-1">
           <label class="block mb-2 font-semibold">Acceptance Date</label>
           <input #acceptanceDateInput type="text" [(ngModel)]="acceptanceDate" name="acceptanceDate"
-            class="w-full border border-gray-300 p-2 rounded" />
+            class="w-full border border-gray-300 p-2 rounded focus:border-yellow-500 focus:ring-yellow-500 hover:border-yellow-500" />
         </div>
         <div class="col-span-1">
           <label class="block mb-2 font-semibold">Closing Date</label>
           <input #closingDateInput type="text" [(ngModel)]="closingDate" name="closingDate"
-            class="w-full border border-gray-300 p-2 rounded" />
+            class="w-full border border-gray-300 p-2 rounded focus:border-yellow-500 focus:ring-yellow-500 hover:border-yellow-500" />
         </div>
       </div>
 
       <!-- Additional Fields Section -->
       <div class="bg-gray-100 p-4 rounded-lg mb-4">
         <button type="button" (click)="toggleAdditionalFields()" class="flex items-center text-yellow-500 mb-2">
-          <img src="../../../../../assets/icons8-ordenar-para-a-direita-24.png " alt="Arrow Right"
+          <img src="../../../../../assets/icons8-ordenar-para-a-direita-24.png" alt="Arrow Right"
             class="w-4 h-4 mr-2" />
           <span class="text-sm font-semibold">Additional Fields</span>
         </button>
-        <div [ngClass]="{'hidden': !toggleFields}" class="grid grid-cols-2 gap-4">
+        <div [ngClass]="{'hidden': !toggleFields}" class="grid grid-cols-3 gap-4">
           <div class="col-span-1">
-            <label class="block mb-2 font-semibold">Additional Input 1</label>
-            <input type="text" [(ngModel)]="additionalInput1" name="additionalInput1"
-              class="w-full border border-gray-300 p-2 rounded" />
+            <label class="block mb-2 font-semibold">MLS #</label>
+            <input type="text" [(ngModel)]="additionalFields['mls']" name="mls"
+              class="w-full border border-gray-300 p-2 rounded focus:border-yellow-500 focus:ring-yellow-500 hover:border-yellow-500" />
           </div>
           <div class="col-span-1">
-            <label class="block mb-2 font-semibold">Additional Input 2</label>
-            <input type="text" [(ngModel)]="additionalInput2" name="additionalInput2"
-              class="w-full border border-gray-300 p-2 rounded" />
+            <label class="block mb-2 font-semibold">Lead Source</label>
+            <input type="text" [(ngModel)]="additionalFields['leadSource']" name="leadSource"
+              class="w-full border border-gray-300 p-2 rounded focus:border-yellow-500 focus:ring-yellow-500 hover:border-yellow-500" />
           </div>
         </div>
       </div>
 
+      <!-- Submit Button -->
       <div class="flex items-center justify-between mb-4">
         <div class="mt-5"><span class="text-gray-500 text-xs italic">step 1 of 3</span></div>
 
         <button type="submit" class="bg-yellow-500 text-white px-4 py-2 rounded flex items-center space-x-2">
-          <span class="font-bold">Next</span>
+          <span class="font-bold">{{ transaction ? 'Update' : 'Save' }}</span>
           <img src="../../../../../assets/icons8-seta-longa-à-direita-30.png" alt="Next" class="w-5 h-5" />
         </button>
       </div>
     </form>
-    <div *ngIf="errorMsg" class="text-red-500 text-sm mt-2">{{ errorMsg }}</div>
   </div>
 </div>

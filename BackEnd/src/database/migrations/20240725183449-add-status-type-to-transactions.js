@@ -3,12 +3,10 @@ module.exports = {
     await queryInterface.addColumn('transactions', 'type', {
       type: Sequelize.STRING,
       allowNull: false,
-      defaultValue: 'Residential Sale',
     });
     await queryInterface.addColumn('transactions', 'status', {
       type: Sequelize.STRING,
       allowNull: false,
-      defaultValue: 'Listing',
     });
   },
 

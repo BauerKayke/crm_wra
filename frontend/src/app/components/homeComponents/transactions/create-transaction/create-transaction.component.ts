@@ -5,6 +5,7 @@ import {
   AfterViewInit,
   EventEmitter,
   Output,
+  Input,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
@@ -21,9 +22,10 @@ import { AxiosError } from 'axios';
   imports: [FormsModule, CommonModule, ToastModule],
   templateUrl: './create-transaction.component.html',
   styleUrls: ['./create-transaction.component.scss'],
-  providers: [MessageService], // Adiciona o MessageService como provider
+  providers: [MessageService],
 })
 export class CreateTransactionComponent implements AfterViewInit {
+  @Input() transaction: any;
   @Output() transactionCreated = new EventEmitter<any>();
   @Output() close = new EventEmitter<void>();
 
@@ -42,26 +44,56 @@ export class CreateTransactionComponent implements AfterViewInit {
   city = '';
   state = '';
   zip = '';
-  price = 0;
-  listingDate: string = '';
-  expirationDate: string = '';
-  acceptanceDate: string = '';
-  closingDate: string = '';
+  price = '';
+  listingDate = '';
+  expirationDate = '';
+  acceptanceDate = '';
+  closingDate = '';
 
-  // Campos adicionais
-  additionalInput1 = '';
-  additionalInput2 = '';
+  additionalFields: { [key: string]: any } = {
+    mls: '',
+    leadSource: '',
+  };
 
-  transactionTypes = ['Residential Sale', 'Commercial Sale', 'Rental'];
-  statusOptions = ['Listing', 'Under Contract', 'Sold'];
-  toggleFields: boolean = false;
-  errorMsg: string = '';
+  transactionTypes = [
+    'Residential Sale',
+    'Commercial Sale',
+    'Rent/lease',
+    'Vacant land',
+    'Commercial lease',
+    'Business',
+    'Other',
+    'Referral',
+    'House sale',
+    'House sale other',
+  ];
+  statusOptions = ['Listing', 'Pre-listing', 'Pending'];
+  toggleFields = false;
+  errorMsg = '';
+  isProcessing = false;
 
   constructor(
     private addressService: AddressService,
     private transactionService: TransactionService,
-    private messageService: MessageService // Injete o MessageService
+    private messageService: MessageService
   ) {}
+
+  ngOnInit() {
+    if (this.transaction) {
+      this.address = this.transaction.address || '';
+      this.city = this.transaction.city || '';
+      this.state = this.transaction.state || '';
+      this.zip = this.transaction.zip || '';
+      this.price = this.formatPrice(this.transaction.price || '');
+      this.listingDate = this.transaction.listing_date || '';
+      this.expirationDate = this.transaction.expiration_date || '';
+      this.acceptanceDate = this.transaction.acceptance_date || '';
+      this.closingDate = this.transaction.closing_date || '';
+      this.additionalFields = this.transaction.additional_fields || {};
+      this.transactionType = this.transaction.type || 'Residential Sale';
+      this.status = this.transaction.status || 'Listing';
+    }
+  }
 
   ngAfterViewInit() {
     new Cleave(this.priceInput.nativeElement, {
@@ -94,6 +126,18 @@ export class CreateTransactionComponent implements AfterViewInit {
       datePattern: ['m', 'd', 'Y'],
       delimiter: '/',
     });
+  }
+
+  formatPrice(price: any): string {
+    if (price === undefined || price === null) {
+      return '';
+    }
+
+    return price.toString().replace(/[^0-9.-]+/g, '');
+  }
+
+  onPriceChange(value: string) {
+    this.price = value;
   }
 
   async onZipChange() {
@@ -137,61 +181,93 @@ export class CreateTransactionComponent implements AfterViewInit {
     this.toggleFields = !this.toggleFields;
   }
 
-  async submitTransaction() {
+  private getTransactionData(): any {
+    const formattedPrice = parseFloat(
+      this.price.replace(/[^0-9.-]+/g, '') || '0'
+    );
+
+    return {
+      address: this.address,
+      city: this.city,
+      state: this.state,
+      zip: this.zip,
+      price: formattedPrice,
+      listing_date: this.listingDate,
+      expiration_date: this.expirationDate,
+      acceptance_date: this.acceptanceDate || null,
+      closing_date: this.closingDate || null,
+      additional_fields: this.additionalFields,
+      type: this.transactionType,
+      status: this.status,
+    };
+  }
+
+  private async createTransaction(transactionData: any) {
     try {
-      // Garantir que `this.price` seja uma string e remover caracteres não numéricos
-      const formattedPrice = parseFloat(
-        (typeof this.price === 'string'
-          ? this.price
-          : this.price.toString()
-        ).replace(/[^0-9.-]+/g, '')
-      );
-
-      const transactionData = {
-        address: this.address,
-        city: this.city,
-        state: this.state,
-        zip: this.zip,
-        price: formattedPrice,
-        listing_date: this.listingDate,
-        expiration_date: this.expirationDate,
-        acceptance_date: this.acceptanceDate || null,
-        closing_date: this.closingDate || null,
-        additional_field_1: this.additionalInput1 || null,
-        additional_field_2: this.additionalInput2 || null,
-        type: this.transactionType, // Corrige o tipo da transação
-        status: this.status, // Corrige o status
-      };
-
+      this.isProcessing = true;
       await this.transactionService.createTransaction(transactionData);
-
-      // Exibe uma mensagem de sucesso
       this.messageService.add({
         severity: 'success',
         summary: 'Success',
         detail: 'Transaction created successfully.',
       });
-
-      // Emite o evento de transação criada
       this.transactionCreated.emit(transactionData);
-
-      // Fecha o modal
-      this.closeModal();
     } catch (error) {
-      // Tipar o erro como AxiosError
-      if (error instanceof AxiosError) {
-        this.messageService.add({
-          severity: 'error',
-          summary: 'Error',
-          detail: 'Failed to create transaction. Please try again.',
-        });
-      } else {
-        this.messageService.add({
-          severity: 'error',
-          summary: 'Error',
-          detail: 'An unexpected error occurred. Please try again.',
-        });
-      }
+      this.handleError(error);
+    } finally {
+      this.isProcessing = false; // Desmarca após o processamento
+    }
+  }
+
+  private async updateTransaction(transactionData: any) {
+    try {
+      this.isProcessing = true;
+      await this.transactionService.updateTransaction(
+        this.transaction.id,
+        transactionData
+      );
+      this.messageService.add({
+        severity: 'success',
+        summary: 'Success',
+        detail: 'Transaction updated successfully.',
+      });
+      this.transactionCreated.emit(transactionData);
+    } catch (error) {
+      this.handleError(error);
+    } finally {
+      this.isProcessing = false; // Desmarca após o processamento
+    }
+  }
+
+  async submitTransaction() {
+    if (this.isProcessing) {
+      console.log('Transaction is already being processed.');
+      return; // Retorna se já estiver processando
+    }
+    const transactionData = this.getTransactionData();
+
+    if (this.transaction) {
+      await this.updateTransaction(transactionData);
+    } else {
+      await this.createTransaction(transactionData);
+    }
+
+    this.closeModal();
+  }
+
+  private handleError(error: any) {
+    if (error instanceof AxiosError) {
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Error',
+        detail: 'Failed to save transaction. Please try again.',
+      });
+    } else {
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Error',
+        detail: 'An unexpected error occurred. Please try again.',
+      });
     }
   }
 

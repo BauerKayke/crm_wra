@@ -23,7 +23,8 @@
     <!-- Barra de busca e botão -->
     <div class="flex items-center space-x-4">
       <input type="text" placeholder="Search address, MLS # ..."
-        class="px-4 py-2 rounded-full w-64 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-yellow-500 transition duration-300" />
+        class="px-4 py-2 rounded-full w-64 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-yellow-500 transition duration-300"
+        [(ngModel)]="searchText" (ngModelChange)="filterTransactions()" />
       <button (click)="openCreateTransaction()"
         class="bg-yellow-500 text-white px-4 py-2 rounded-lg flex items-center space-x-2 transition duration-300 hover:bg-yellow-600">
         <span class="font-medium">Create Transaction</span>
@@ -52,36 +53,42 @@
   </div>
 
   <!-- Exibição de Transações -->
-  <div *ngIf="transactions.length > 0" class="grid gap-6 mt-8">
-    <div *ngFor="let transaction of transactions"
+  <div *ngIf="filteredTransactions.length > 0" class="grid gap-6 mt-8">
+    <div *ngFor="let transaction of filteredTransactions"
       class="bg-white border border-gray-200 rounded-lg shadow-md overflow-hidden">
-      <div class="p-6 flex flex-col space-y-4">
-        <div class="flex items-center space-x-3">
-          <div
-            class="w-32 h-16 bg-yellow-500 text-white flex items-center justify-center rounded-full font-semibold text-xl">
-            {{ formatPrice(transaction.price) }}
+      <div class="relative">
+        <!-- Ícone de Lixeira -->
+        <button (click)="deleteTransaction(transaction.id)" class="absolute top-7 right-4">
+          <img src="../../../../assets/icons8-lixeira-30.png" alt="Delete Icon" class="w-6 h-6" />
+        </button>
+        <div (click)="editTransaction(transaction)" class="p-6 flex flex-col space-y-4 cursor-pointer">
+          <div class="flex items-center space-x-3">
+            <div
+              class="w-32 h-16 bg-yellow-500 text-white flex items-center justify-center rounded-full font-semibold text-xl">
+              {{ formatPrice(transaction.price) }}
+            </div>
+            <div class="flex-1">
+              <h2 class="text-xl font-semibold text-slate-900">{{ transaction.address }}</h2>
+              <p class="text-gray-600">{{ transaction.city }}, {{ transaction.state }} {{ transaction.zip }}</p>
+            </div>
           </div>
-          <div class="flex-1">
-            <h2 class="text-xl font-semibold text-slate-900">{{ transaction.address }}</h2>
-            <p class="text-gray-600">{{ transaction.city }}, {{ transaction.state }} {{ transaction.zip }}</p>
-          </div>
-        </div>
-        <div class="grid grid-cols-2 gap-4">
-          <div class="space-y-1">
-            <p class="text-gray-500">Listing Date</p>
-            <p class="text-gray-800 font-medium">{{ transaction.listingDate | date:'MMM d, y' }}</p>
-          </div>
-          <div class="space-y-1">
-            <p class="text-gray-500">Expiration Date</p>
-            <p class="text-gray-800 font-medium">{{ transaction.expirationDate | date:'MMM d, y' }}</p>
-          </div>
-          <div class="space-y-1">
-            <p class="text-gray-500">Acceptance Date</p>
-            <p class="text-gray-800 font-medium">{{ transaction.acceptanceDate | date:'MMM d, y' }}</p>
-          </div>
-          <div class="space-y-1">
-            <p class="text-gray-500">Closing Date</p>
-            <p class="text-gray-800 font-medium">{{ transaction.closingDate | date:'MMM d, y' }}</p>
+          <div class="grid grid-cols-2 gap-4">
+            <div class="space-y-1">
+              <p class="text-gray-500">Listing Date</p>
+              <p class="text-gray-800 font-medium">{{ transaction.listing_date | date:'MM/dd/yyyy' }}</p>
+            </div>
+            <div class="space-y-1">
+              <p class="text-gray-500">Expiration Date</p>
+              <p class="text-gray-800 font-medium">{{ transaction.expiration_date | date:'MM/dd/yyyy' }}</p>
+            </div>
+            <div class="space-y-1">
+              <p class="text-gray-500">Acceptance Date</p>
+              <p class="text-gray-800 font-medium">{{ transaction.acceptance_date | date:'MM/dd/yyyy' }}</p>
+            </div>
+            <div class="space-y-1">
+              <p class="text-gray-500">Closing Date</p>
+              <p class="text-gray-800 font-medium">{{ transaction.closing_date | date:'MM/dd/yyyy' }}</p>
+            </div>
           </div>
         </div>
       </div>
@@ -89,6 +96,7 @@
   </div>
 
   <!-- Componente de Criação de Transações -->
-  <app-create-transaction *ngIf="isCreateTransactionOpen" (transactionCreated)="onTransactionCreated($event)"
-    (close)="closeCreateTransaction()"></app-create-transaction>
+  <app-create-transaction *ngIf="isCreateTransactionOpen" [transaction]="selectedTransaction"
+    (create)="onTransactionCreated($event)" (close)="closeCreateTransaction()">
+  </app-create-transaction>
 </div>

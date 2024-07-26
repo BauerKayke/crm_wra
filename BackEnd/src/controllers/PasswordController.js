@@ -29,7 +29,6 @@ class PasswordController {
 
       res.json({ message: 'Verification code sent' });
     } catch (e) {
-      console.error(e);
       res.status(500).json({ error: 'Internal server error' });
     }
   }
@@ -45,7 +44,6 @@ class PasswordController {
 
       res.json({ message: 'Code verified' });
     } catch (e) {
-      console.error(e);
       res.status(500).json({ error: 'Internal server error' });
     }
   }
@@ -65,7 +63,6 @@ class PasswordController {
 
       res.json({ message: 'Password updated' });
     } catch (e) {
-      console.error(e);
       res.status(500).json({ error: 'Internal server error' });
     }
   }

@@ -3,6 +3,18 @@ import Transaction from '../models/Transaction';
 class TransactionController {
   async store(req, res) {
     try {
+      const { id, additional_fields } = req.body;
+
+      // Verificar se foi fornecido um id para a criação
+      if (id) {
+        return res.status(400).json({ errors: ['ID should not be provided for creating new transactions.'] });
+      }
+
+      // Verificar se additional_fields é um JSON válido, se necessário
+      if (additional_fields && typeof additional_fields !== 'object') {
+        return res.status(400).json({ errors: ['Additional fields must be a valid JSON object.'] });
+      }
+
       const transaction = await Transaction.create(req.body);
       return res.status(201).json({ message: 'Transaction created successfully.', transaction });
     } catch (e) {

@@ -1,8 +1,20 @@
-import Sequelize, { Model } from 'sequelize';
-
-export default class Transaction extends Model {
-  static init(sequelize) {
-    super.init({
+module.exports = {
+  up: async (queryInterface, Sequelize) => {
+    await queryInterface.createTable('Transactions', {
+      id: {
+        allowNull: false,
+        autoIncrement: true,
+        primaryKey: true,
+        type: Sequelize.INTEGER,
+      },
+      type: {
+        type: Sequelize.STRING,
+        allowNull: false,
+      },
+      status: {
+        type: Sequelize.STRING,
+        allowNull: false,
+      },
       address: {
         type: Sequelize.STRING,
         allowNull: false,
@@ -33,29 +45,26 @@ export default class Transaction extends Model {
       },
       acceptance_date: {
         type: Sequelize.DATE,
-        allowNull: true,
       },
       closing_date: {
         type: Sequelize.DATE,
-        allowNull: true,
       },
-      additional_fields: { // Renomeado para `additional_fields`
+      additionalFields: {
         type: Sequelize.JSON,
         allowNull: true,
       },
-      type: {
-        type: Sequelize.STRING,
+      createdAt: {
         allowNull: false,
+        type: Sequelize.DATE,
       },
-      status: {
-        type: Sequelize.STRING,
+      updatedAt: {
         allowNull: false,
+        type: Sequelize.DATE,
       },
-    }, {
-      sequelize,
-      tableName: 'transactions',
     });
+  },
 
-    return this;
-  }
-}
+  down: async (queryInterface) => {
+    await queryInterface.dropTable('Transactions');
+  },
+};

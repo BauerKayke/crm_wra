@@ -10,6 +10,7 @@ export class AddressService {
   async getAddressByZip(zip: string) {
     try {
       const response = await axios.get(`${this.baseUrl}/${zip}`);
+      console.log(response);
       return response.data;
     } catch (error) {
       console.error('Error fetching address:', error);
