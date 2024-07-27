@@ -1,54 +1,61 @@
-"use strict";/** @type {import('sequelize-cli').Migration} */
-module.exports = {
+"use strict";module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('alunos', {
+    await queryInterface.createTable('transactions', {
       id: {
         type: Sequelize.INTEGER,
-        allowNull: false,
         autoIncrement: true,
         primaryKey: true,
       },
-      nome: {
+      address: {
         type: Sequelize.STRING,
         allowNull: false,
-
       },
-      sobrenome: {
+      city: {
         type: Sequelize.STRING,
         allowNull: false,
-
       },
-      email: {
+      state: {
         type: Sequelize.STRING,
         allowNull: false,
-
       },
-      idade: {
-        type: Sequelize.INTEGER,
+      zip: {
+        type: Sequelize.STRING,
         allowNull: false,
       },
-      peso: {
+      price: {
         type: Sequelize.FLOAT,
         allowNull: false,
-
       },
-      altura: {
-        type: Sequelize.FLOAT,
+      listing_date: {
+        type: Sequelize.DATE,
         allowNull: false,
-
+      },
+      expiration_date: {
+        type: Sequelize.DATE,
+        allowNull: false,
+      },
+      acceptance_date: {
+        type: Sequelize.DATE,
+        allowNull: true,
+      },
+      closing_date: {
+        type: Sequelize.DATE,
+        allowNull: true,
       },
       created_at: {
         type: Sequelize.DATE,
         allowNull: false,
+        defaultValue: Sequelize.NOW,
       },
       updated_at: {
         type: Sequelize.DATE,
         allowNull: false,
+        defaultValue: Sequelize.NOW,
       },
     });
   },
 
   async down(queryInterface) {
-    await queryInterface.dropTable('alunos');
+    await queryInterface.dropTable('transactions');
   },
 };

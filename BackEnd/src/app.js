@@ -12,7 +12,12 @@ import passwordRoutes from './routes/passwordRoutes'; // Rotas para transações
 
 dotenv.config(); // Carrega variáveis de ambiente
 
-const whiteList = ['http://localhost:3000', 'http://localhost:4200'];
+const whiteList = [
+  'http://localhost:3000',
+  'http://localhost:4200',
+  'https://crmwra.netlify.app/',
+  'http://localhost:54617/' // Adiciona a URL do front-end ao whitelist
+];
 
 const corsOptions = {
   origin(origin, callback) {

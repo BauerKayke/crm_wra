@@ -9,12 +9,11 @@ var _bcryptjs = require('bcryptjs'); var _bcryptjs2 = _interopRequireDefault(_bc
         defaultValue: '',
         validate: {
           len: {
-            arg: [3, 255],
+            args: [3, 255],
             msg: 'Campo nome deve ter entre 3 e 255 caracteres',
           },
         },
       },
-
       email: {
         type: _sequelize2.default.STRING,
         defaultValue: '',
@@ -27,6 +26,16 @@ var _bcryptjs = require('bcryptjs'); var _bcryptjs2 = _interopRequireDefault(_bc
           },
         },
       },
+      phone: {
+        type: _sequelize2.default.STRING,
+        defaultValue: '',
+        validate: {
+          len: {
+            args: [10, 15],
+            msg: 'O telefone deve ter entre 10 e 15 caracteres',
+          },
+        },
+      },
       password_hash: {
         type: _sequelize2.default.STRING,
         defaultValue: '',
@@ -35,20 +44,26 @@ var _bcryptjs = require('bcryptjs'); var _bcryptjs2 = _interopRequireDefault(_bc
         type: _sequelize2.default.VIRTUAL,
         defaultValue: '',
         validate: {
-          is: {
-            arg: [6, 50],
+          len: {
+            args: [6, 50],
             msg: 'A senha precisa ter entre 6 e 50 caracteres',
           },
         },
       },
+      validation_code: {
+        type: _sequelize2.default.STRING,
+        defaultValue: '',
+      },
     }, {
       sequelize,
     });
+
     this.addHook('beforeSave', async (user) => {
       if (user.password) {
-        user.password_hash = await _bcryptjs2.default.hash(user.password, 10);
+        user.password_hash = await _bcryptjs2.default.hash(user.password, 8);
       }
     });
+
     return this;
   }
 

@@ -9,28 +9,25 @@ exports. default = async (req, res, next) => {
       errors: ['Login required'],
     });
   }
-  const [, token] = authorization.split(' ');
-  try {
-    const dados = _jsonwebtoken2.default.verify(token, process.env.TOKEN_SECRET);
-    const { id, email } = dados;
 
-    const user = await _User2.default.findOne({
-      where: {
-        id,
-        email,
-      },
-    });
+  const [, token] = authorization.split(' ');
+
+  try {
+    const decoded = _jsonwebtoken2.default.verify(token, process.env.TOKEN_SECRET);
+    const user = await _User2.default.findByPk(decoded.id);
+
     if (!user) {
       return res.status(401).json({
-        errors: ['Usuário inválido.'],
+        errors: ['Invalid user'],
       });
     }
-    req.userId = id;
-    req.userEmail = email;
+
+    req.userId = user.id;
+    req.userEmail = user.email;
     return next();
   } catch (e) {
     return res.status(401).json({
-      errors: ['Token expirado ou inválido.'],
+      errors: ['Token expired or invalid'],
     });
   }
 };
